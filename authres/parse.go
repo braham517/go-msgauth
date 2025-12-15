@@ -16,6 +16,7 @@ const (
 	ResultNone      ResultValue = "none"
 	ResultPass                  = "pass"
 	ResultFail                  = "fail"
+	ResultDeclined              = "declined"
 	ResultPolicy                = "policy"
 	ResultNeutral               = "neutral"
 	ResultTempError             = "temperror"
@@ -224,6 +225,28 @@ func (r *ARCResult) format() (ResultValue, map[string]string) {
 	}
 }
 
+type BIMIResult struct {
+	Value      ResultValue
+	Reason     string
+	Domain     string
+	Identifier string
+}
+
+func (r *BIMIResult) parse(value ResultValue, params map[string]string) error {
+	r.Value = value
+	r.Reason = params["reason"]
+	r.Domain = params["header.d"]
+	r.Identifier = params["header.i"]
+	return nil
+}
+
+func (r *BIMIResult) format() (ResultValue, map[string]string) {
+	return r.Value, map[string]string{
+		"reason":   r.Reason,
+		"header.d": r.Domain,
+		"header.i": r.Identifier,
+	}
+}
 type GenericResult struct {
 	Method string
 	Value  ResultValue
@@ -266,6 +289,9 @@ var results = map[string]newResultFunc{
 	},
 	"dmarc": func() Result {
 		return new(DMARCResult)
+	},
+	"bimi": func() Result {
+		return new(BIMIResult)
 	},
 }
 

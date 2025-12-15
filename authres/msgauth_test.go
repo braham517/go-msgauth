@@ -83,4 +83,20 @@ var msgauthTests = []msgauthTest{
 			&DKIMResult{Value: ResultFail, Identifier: "@newyork.example.com"},
 		},
 	},
+	{
+		value: "example.com;" +
+			" bimi=pass header.d=mail-router.example.net",
+		identifier: "example.com",
+		results: []Result{
+			&BIMIResult{Value: ResultPass, Domain: "mail-router.example.net"},
+		},
+	},
+	{
+		value: "example.com;" +
+			" bimi=fail header.d=example.com",
+		identifier: "example.com",
+		results: []Result{
+			&BIMIResult{Value: ResultFail, Domain: "example.com"},
+		},
+	},
 }
