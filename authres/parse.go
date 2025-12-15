@@ -227,24 +227,21 @@ func (r *ARCResult) format() (ResultValue, map[string]string) {
 
 type BIMIResult struct {
 	Value      ResultValue
-	Reason     string
 	Domain     string
-	Identifier string
+	Selector string
 }
 
 func (r *BIMIResult) parse(value ResultValue, params map[string]string) error {
 	r.Value = value
-	r.Reason = params["reason"]
 	r.Domain = params["header.d"]
-	r.Identifier = params["header.i"]
+	r.Selector = params["header.selector"]
 	return nil
 }
 
 func (r *BIMIResult) format() (ResultValue, map[string]string) {
 	return r.Value, map[string]string{
-		"reason":   r.Reason,
 		"header.d": r.Domain,
-		"header.i": r.Identifier,
+		"header.selector": r.Selector,
 	}
 }
 type GenericResult struct {
